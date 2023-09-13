@@ -139,14 +139,14 @@ async def send_reminder_to(ctx, fname, lname):
             if student_name == current_name:
                 await ctx.respond(send_class_reminders(student, sender_address))
 
-@bot.slash_command(name='add_meeting_time', description='Insert your Google Meet link so that an email can be sent including the meeting link (everything is case sensitive; AM/PM must be capitalized in time)')
+@bot.slash_command(name='add_meeting_time', description='Insert your Google Meet link so that an email can be sent including the meeting link')
 async def add_meeting_time(ctx, link, class_day, class_name, teacher, start_time, end_time):
    
 
     # Create a string re`pre`sentation of the class name and time
-    strclass_name_n_time = (class_name.strip() + ' ' + class_day.strip() + " " + start_time.strip() + ' ' + end_time.strip() + ' ' + teacher.strip().title())
+    strclass_name_n_time = (class_name.strip() + ' ' + class_day.strip() + " " + start_time.strip().upper() + ' ' + end_time.strip().upper() + ' ' + teacher.strip().title())
     #Converts into list
-    class_name_n_time = strclass_name_n_time.split(',')
+    class_name_n_time = list(strclass_name_n_time))
     
     # Define the path to the class schedules directory
     path = 'class_schedules/'
@@ -160,13 +160,15 @@ async def add_meeting_time(ctx, link, class_day, class_name, teacher, start_time
         # Iterate over each class info in the class schedule
         for class_info in class_schedule:
             
+            class_info = list(class_info.values())
+
             # Check if the class info matches the provided class name, time, etc
             if class_info[0] == class_name_n_time[0] and class_info[1] == class_name_n_time[1] and class_info[2] == class_name_n_time[2] and class_info[3] == class_name_n_time[3] and class_info[4] == class_name_n_time[4]:
 
                 # Respond with a confirmation message
                 await ctx.respond(f"Meeting link ({link}) for {class_name} on {class_day} at {start_time} to {end_time} with {teacher} has been added.")
                 
-                class_info['Google Meet Links'] = link
+                class_info.insert(8, link)
 
                 with open('schedule.csv', 'w', newline='') as file:
                     writer = csv.writer(file)
