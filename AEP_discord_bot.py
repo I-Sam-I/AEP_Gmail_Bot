@@ -144,9 +144,10 @@ async def add_meeting_time(ctx, link, class_day, class_name, teacher, start_time
    
 
     # Create a string re`pre`sentation of the class name and time
-    strclass_name_n_time = (class_name.strip() + ' ' + class_day.strip() + " " + start_time.strip().upper() + ' ' + end_time.strip().upper() + ' ' + teacher.strip().title())
-    #Converts into list
+    strclass_name_n_time = (class_name, class_day, start_time.upper(), end_time.upper(), teacher.title())
+#Converts into lst
     class_name_n_time = list(strclass_name_n_time)
+
     
     # Define the path to the class schedules directory
     path = 'class_schedules/'
@@ -174,7 +175,7 @@ async def add_meeting_time(ctx, link, class_day, class_name, teacher, start_time
                     writer = csv.writer(file)
                     writer.writerow(class_info)
                     await ctx.respond("=========================================================")
-                    await ctx.respond(f"MEETING LINK ADDED: File Updated to: ```{class_info[0:4] + {class_info[8]}}```")
+                    await ctx.respond(f"MEETING LINK ADDED: File Updated to: ```{class_info[0:5]} {class_info[8]}```")
                     break
 
 
